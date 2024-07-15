@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const productContainer = document.getElementById('product-container');
     const categoryButtons = document.querySelectorAll('#category-buttons button');
+    const searchButton = document.getElementById('search-button');
+    const searchInput = document.getElementById('search-input');
 
     let allProducts = [];
 
@@ -16,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         category: category.category_name  // Add category name to each product
                     }));
                 });
+                // Display all products initially
+                displayProducts('All');
             } else {
                 console.error('Expected an array of categories but got:', data.categories);
                 return;
@@ -27,13 +31,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     displayProducts(category);
                 });
             });
+
+            searchButton.addEventListener('click', () => {
+                const query = searchInput.value.toLowerCase();
+                displayProducts('All', query);
+            });
         })
         .catch(error => console.error('Error fetching data:', error));
 
-    function displayProducts(category) {
+    function displayProducts(category, query = '') {
         productContainer.innerHTML = '';  // Clear existing products
 
-        const filteredProducts = allProducts.filter(product => product.category === category);
+        let filteredProducts = allProducts;
+        if (category !== 'All') {
+            filteredProducts = filteredProducts.filter(product => product.category === category);
+        }
+        if (query) {
+            filteredProducts = filteredProducts.filter(product => product.title.toLowerCase().includes(query));
+        }
 
         filteredProducts.forEach(product => {
             const productDiv = document.createElement('div');
