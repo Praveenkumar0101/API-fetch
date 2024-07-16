@@ -266,3 +266,20 @@ body {
 #cart-actions button:hover, #wishlist-actions button:hover, #cart-actions a:hover, #wishlist-actions a:hover {
     background-color: #c82333;
 }
+
+footer {
+    background-color: #333; /* Dark background color */
+    color: #eee9e9; /* Light text color */
+    text-align: center; /* Center the text */
+    padding: 20px 0; /* Padding for top and bottom */
+    font-size: 16px; /* Font size */
+    position: relative; /* Fix the footer to the bottom */
+    width: 100%; /* Full width */
+    bottom: 0; /* Position at the bottom */
+    z-index: 1000; /* Ensure it stays on top */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+}
+
+footer p {
+    margin: 0; /* Remove default margin */
+}
