@@ -3,8 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoryButtons = document.querySelectorAll('#category-buttons button');
     const searchButton = document.getElementById('search-button');
     const searchInput = document.getElementById('search-input');
-
+    
     let allProducts = [];
+    let cart = [];
 
     fetch('https://cdn.shopify.com/s/files/1/0564/3685/0790/files/multiProduct.json')
         .then(response => response.json())
@@ -66,7 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
             productDescription.textContent = `Price: ${product.price}, Compare at: ${product.compare_at_price}, Vendor: ${product.vendor}, Badge: ${product.badge_text || 'None'}`;
             productDiv.appendChild(productDescription);
 
+            const addToCartButton = document.createElement('button');
+            addToCartButton.textContent = 'Add to Cart';
+            addToCartButton.classList.add('add-to-cart-button');
+            addToCartButton.addEventListener('click', () => addToCart(product));
+            productDiv.appendChild(addToCartButton);
+
             productContainer.appendChild(productDiv);
         });
+    }
+
+    function addToCart(product) {
+        cart.push(product);
+        console.log('Cart:', cart);
+        alert(`${product.title} has been added to your cart.`);
     }
 });
