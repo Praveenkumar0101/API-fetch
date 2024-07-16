@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     
     let allProducts = [];
-    let cart = [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
     fetch('https://cdn.shopify.com/s/files/1/0564/3685/0790/files/multiProduct.json')
         .then(response => response.json())
@@ -48,7 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
             filteredProducts = filteredProducts.filter(product => product.category === category);
         }
         if (query) {
-            filteredProducts = filteredProducts.filter(product => product.title.toLowerCase().includes(query));
+            filteredProducts = filteredProducts.filter(product => 
+                product.title.toLowerCase().includes(query) || 
+                product.vendor.toLowerCase().includes(query)
+            );
         }
 
         filteredProducts.forEach(product => {
@@ -73,13 +77,43 @@ document.addEventListener('DOMContentLoaded', () => {
             addToCartButton.addEventListener('click', () => addToCart(product));
             productDiv.appendChild(addToCartButton);
 
+            const addToWishlistButton = document.createElement('button');
+            addToWishlistButton.textContent = 'Add to Wishlist';
+            addToWishlistButton.classList.add('add-to-wishlist-button');
+            addToWishlistButton.addEventListener('click', () => addToWishlist(product));
+            productDiv.appendChild(addToWishlistButton);
+
             productContainer.appendChild(productDiv);
         });
     }
 
     function addToCart(product) {
         cart.push(product);
-        console.log('Cart:', cart);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartIcon();
         alert(`${product.title} has been added to your cart.`);
     }
+
+    function addToWishlist(product) {
+        wishlist.push(product);
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        updateWishlistIcon();
+        alert(`${product.title} has been added to your wishlist.`);
+    }
+
+    function updateCartIcon() {
+        const cartCountElement = document.getElementById('cart-count');
+        const cartCount = cart.length;
+        cartCountElement.textContent = cartCount;
+    }
+
+    function updateWishlistIcon() {
+        const wishlistCountElement = document.getElementById('wishlist-count');
+        const wishlistCount = wishlist.length;
+        wishlistCountElement.textContent = wishlistCount;
+    }
+
+    // Initialize the cart and wishlist counts
+    updateCartIcon();
+    updateWishlistIcon();
 });
